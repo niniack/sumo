@@ -55,6 +55,7 @@
 /bin/testnetbuild*
 /bin/testlibsumo*
 /bin/testthreadpool*
+/bin/testomp*
 /bin/*.dll
 /bin/*.dylib
 /bin/*.so
