@@ -22,7 +22,7 @@
 // included modules
 // ===========================================================================
 #include <config.h>
-
+#include <iostream>
 #include <gtest/gtest.h>
 #include <utils/common/StdDefs.h>
 #include <utils/omp/OMPThreading.h>
@@ -44,6 +44,45 @@ TEST(OMPWorkerThread, test_init)
     OMPWorkerThread::Pool g(4);
 }
 
+/* Test size of pool */
+TEST(OMPWorkerThread, test_size)
+{
+    uint8_t num_threads = 10;
+    OMPWorkerThread::Pool g(num_threads);
+    assert(num_threads == g.size());
+    assert(num_threads == g.getWorkers().size());
+}
+
+/* Test pool destruction */
+TEST(OMPWorkerThread, test_pool_destruction)
+{
+    uint8_t num_threads = 10;
+    OMPWorkerThread::Pool g(num_threads);
+    g.clear();
+    assert(0 == g.size());
+    assert(0 == g.getWorkers().size());
+}
+
+/* Test adding worker */
+TEST(OMPWorkerThread, test_add_worker)
+{
+    uint8_t num_threads = 2;
+    OMPWorkerThread::Pool g(num_threads);
+    new OMPWorkerThread(g);
+    assert(num_threads + 1 == g.size());
+}
+
+/* Test basic OpenMP API */
+TEST(OMPWorkerThread, test_openmp_basic)
+{
+    uint8_t num_threads = 4;
+    omp_set_num_threads(num_threads);
+#pragma omp parallel
+    {
+        assert(num_threads == omp_get_num_threads());
+    }
+}
+
 /* Test retrieving all tasks.*/
 TEST(OMPWorkerThread, test_get_all)
 {
@@ -56,5 +95,5 @@ TEST(OMPWorkerThread, test_get_all)
     g.add(task2);
     g.add(task3);
     g.add(task4);
-    g.waitAll();
+    assert(4 == g.getNumberOfTasks());
 }

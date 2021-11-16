@@ -115,10 +115,11 @@ public:
                 delete worker;
             }
             myWorkers.clear();
+            numberOfWorkers = 0;
             return;
         }
 
-        /** @brief Adds the given thread to the pool.
+        /** @brief Increments the number of workers
          *
          * @param[in] w the thread to add
          */
@@ -136,13 +137,8 @@ public:
          */
         void add(Task *const t, int index = -1)
         {
-            if (index < 0)
-            {
-                index = myRunningIndex % myWorkers.size();
-            }
-
+            myTasks.push_back(t);
             t->setIndex(myRunningIndex++);
-            myWorkers[index]->add(t);
             return;
         }
 
@@ -177,7 +173,7 @@ public:
          */
         bool isFull() const
         {
-            return myRunningIndex - (int)myFinishedTasks.size() >= size();
+            return false;
         }
 
         /** @brief Returns the number of threads in the pool.
@@ -186,7 +182,7 @@ public:
          */
         int size() const
         {
-            return (int)myWorkers.size();
+            return numberOfWorkers;
         }
 
         /// @brief locks the pool mutex
@@ -206,9 +202,27 @@ public:
             return myWorkers;
         }
 
+        const std::vector<Task *> &getTasks()
+        {
+            return myTasks;
+        }
+
+        int getNumberOfTasks()
+        {
+            return this->myTasks.size();
+        }
+
+        void incrementNumberOfWorkers()
+        {
+            this->numberOfWorkers++;
+            return;
+        }
+
     private:
         /// @brief the number of threads OpenMP should use
-        int numberOfWorkers;
+        int numberOfWorkers = 0;
+        /// @brief a vector of tasks to be completed by OpenMP
+        std::vector<Task *> myTasks;
         /// @brief the current worker threads
         std::vector<OMPWorkerThread *> myWorkers;
         /// @brief list of finished tasks
@@ -227,11 +241,8 @@ public:
      * @param[in] pool the pool for this thread
      */
     OMPWorkerThread(Pool &pool) : myPool(pool), myStopped(false)
-#ifdef WORKLOAD_PROFILING
-                                  ,
-                                  myCounter(0), myBusyTime(0), myTotalBusyTime(0), myTotalTime(0)
-#endif
     {
+        pool.incrementNumberOfWorkers();
         pool.addWorker(this);
     }
 
@@ -241,6 +252,7 @@ public:
      */
     virtual ~OMPWorkerThread()
     {
+        return;
     }
 
     /** @brief Adds the given task to this thread to be calculated
@@ -249,7 +261,6 @@ public:
      */
     void add(Task *t)
     {
-        myTasks.push_back(t);
         return;
     }
 
@@ -276,12 +287,6 @@ public:
 private:
     /// @brief the pool for this thread
     Pool &myPool;
-
-    // /// @brief the mutex for the task list
-    // FXMutex myMutex;
-    // /// @brief the semaphore when waiting for new tasks
-    // FXCondition myCondition;
-
     /// @brief the list of pending tasks
     std::list<Task *> myTasks;
     /// @brief the list of tasks which are currently calculated
