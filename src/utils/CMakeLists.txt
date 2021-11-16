@@ -12,13 +12,14 @@ add_subdirectory(traci)
 add_subdirectory(traction_wire)
 add_subdirectory(vehicle)
 add_subdirectory(xml)
+add_subdirectory(omp)
 if (FOX_FOUND)
     add_subdirectory(foxtools)
     add_subdirectory(gui)
 endif ()
 
 if (SUMO_UTILS)
-    set(utillibs utils_distribution utils_handlers utils_shapes utils_options utils_xml
+    set(utillibs utils_distribution utils_handlers utils_shapes utils_options utils_omp utils_xml
         utils_geom utils_common utils_importio utils_iodevices foreign_tcpip ${PROJ_LIBRARY})
     file(WRITE empty.cpp "")
     add_library(sumoutils SHARED empty.cpp)

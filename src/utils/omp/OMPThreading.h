@@ -26,6 +26,7 @@
 // undefine to use summary report only
 #define WORKLOAD_INTERVAL 100
 #include <config.h>
+#include <omp.h>
 
 #include <list>
 #include <vector>
@@ -36,7 +37,7 @@
 // ===========================================================================
 /**
  * @class OMPWorkerThread
- * @brief A thread repeatingly calculating incoming tasks
+ * @brief A thread repeatedly calculating incoming tasks
  */
 class OMPWorkerThread
 {
@@ -88,12 +89,7 @@ public:
          * @param[in] numThreads the number of threads to create
          */
         Pool(int numThreads = 0) : myRunningIndex(0), myException(nullptr)
-#ifdef WORKLOAD_PROFILING
-                                   ,
-                                   myNumBatches(0), myTotalMaxLoad(0.), myTotalSpread(0.)
-#endif
         {
-
             while (numThreads > 0)
             {
                 new OMPWorkerThread(*this);
@@ -211,16 +207,10 @@ public:
         }
 
     private:
+        /// @brief the number of threads OpenMP should use
+        int numberOfWorkers;
         /// @brief the current worker threads
         std::vector<OMPWorkerThread *> myWorkers;
-
-        // /// @brief the internal mutex for the task list
-        // FXMutex myMutex;
-        // /// @brief the pool mutex for external sync
-        // FXMutex myPoolMutex;
-        // /// @brief the semaphore to wait on for finishing all tasks
-        // FXCondition myCondition;
-
         /// @brief list of finished tasks
         std::list<Task *> myFinishedTasks;
         /// @brief the running index for the next task
