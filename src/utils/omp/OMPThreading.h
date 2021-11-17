@@ -129,8 +129,7 @@ public:
             return;
         }
 
-        /** @brief Gives a number to the given task and assigns it to the worker with the given index.
-         * If the index is negative, assign to the next (round robin) one.
+        /** @brief Gives a number to the given task. The index is unused
          *
          * @param[in] t the task to add
          * @param[in] index index of the worker thread to use or -1 for an arbitrary one
@@ -161,6 +160,28 @@ public:
         /// @brief waits for all tasks to be finished
         void waitAll(const bool deleteFinished = true)
         {
+            // Create dummy context
+            OMPWorkerThread *dummy = myWorkers[0];
+
+            // Set number of threads to be forked
+            omp_set_num_threads(this->numberOfWorkers);
+
+// Synchronized parallel region
+#pragma omp parallel
+            {
+// No barrier on single
+#pragma omp single nowait
+                {
+                    for (auto &task : myTasks)
+                    {
+#pragma omp task
+                        {
+                            task->run(dummy);
+                        }
+                    }
+                }
+#pragma omp taskwait
+            }
             return;
         }
 
@@ -171,7 +192,8 @@ public:
          *
          * @return whether there are enough tasks to let all threads work
          */
-        bool isFull() const
+        bool
+        isFull() const
         {
             return false;
         }
@@ -236,7 +258,7 @@ public:
 public:
     /** @brief Constructor
      *
-     * Adds the thread to the given pool and starts it.
+     * Adds the thread to the given pool. This is an empty class.
      *
      * @param[in] pool the pool for this thread
      */
@@ -248,14 +270,15 @@ public:
 
     /** @brief Destructor
      *
-     * Stops the thread by calling stop.
      */
     virtual ~OMPWorkerThread()
     {
         return;
     }
 
-    /** @brief Adds the given task to this thread to be calculated
+    /** @brief [UNSUPPORTED] Adds the given task to this thread to be calculated
+     * 
+     * Cannot assign a task specifically to an OpenMP thread.
      *
      * @param[in] t the task to add
      */
@@ -264,9 +287,9 @@ public:
         return;
     }
 
-    /** @brief Main execution method of this thread.
+    /** @brief [UNSUPPORTED] Main execution method of this thread.
      *
-     * Checks for new tasks, calculates them and puts them in the finished list of the pool until being stopped.
+     * [UNSUPPORTED] Cannot explicitly control OpenMP thread and assign tasks to specific thread.
      *
      * @return always 0
      */
@@ -275,9 +298,9 @@ public:
         return 0;
     }
 
-    /** @brief Stops the thread
+    /** @brief [UNSUPPORTED] Stops the thread
      *
-     * The currently running task will be finished but all further tasks are discarded.
+     * [UNSUPPORTED] Cannot terminate OpenMP Thread explicitly once forked.
      */
     void stop()
     {

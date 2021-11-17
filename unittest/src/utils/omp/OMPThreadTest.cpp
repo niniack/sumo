@@ -32,6 +32,7 @@ class TestTask : public OMPWorkerThread::Task
 public:
     void run(OMPWorkerThread * /* context */)
     {
+        printf("Hello World!\n");
     }
 };
 
@@ -96,4 +97,5 @@ TEST(OMPWorkerThread, test_get_all)
     g.add(task3);
     g.add(task4);
     assert(4 == g.getNumberOfTasks());
+    g.waitAll();
 }
