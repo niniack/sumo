@@ -47,6 +47,7 @@
 #ifdef HAVE_FOX
 #include <utils/foxtools/FXWorkerThread.h>
 #endif
+#include <utils/omp/OMPThreading.h>
 #include <utils/common/StopWatch.h>
 
 
@@ -1166,17 +1167,17 @@ public:
     bool mustCheckJunctionCollisions() const;
 
 #ifdef HAVE_FOX
-    FXWorkerThread::Task* getPlanMoveTask(const SUMOTime time) {
+    OMPWorkerThread::Task *getPlanMoveTask(const SUMOTime time) {
         mySimulationTask.init(&MSLane::planMovements, time);
         return &mySimulationTask;
     }
 
-    FXWorkerThread::Task* getExecuteMoveTask(const SUMOTime time) {
+    OMPWorkerThread::Task *getExecuteMoveTask(const SUMOTime time) {
         mySimulationTask.init(&MSLane::executeMovements, time);
         return &mySimulationTask;
     }
 
-    FXWorkerThread::Task* getLaneChangeTask(const SUMOTime time) {
+    OMPWorkerThread::Task *getLaneChangeTask(const SUMOTime time) {
         mySimulationTask.init(&MSLane::changeLanes, time);
         return &mySimulationTask;
     }
@@ -1613,7 +1614,8 @@ private:
      * @class SimulationTask
      * @brief the routing task which mainly calls reroute of the vehicle
      */
-    class SimulationTask : public FXWorkerThread::Task {
+    
+    /*class SimulationTask : public FXWorkerThread::Task {
     public:
         SimulationTask(MSLane& l, const SUMOTime time)
             : myLane(l), myTime(time) {}
@@ -1621,7 +1623,7 @@ private:
             myOperation = operation;
             myTime = time;
         }
-        void run(FXWorkerThread* /*context*/) {
+        void run(FXWorkerThread* ) {
             try {
                 (myLane.*(myOperation))(myTime);
             } catch (ProcessError& e) {
@@ -1633,8 +1635,40 @@ private:
         MSLane& myLane;
         SUMOTime myTime;
     private:
-        /// @brief Invalidated assignment operator.
+
         SimulationTask& operator=(const SimulationTask&) = delete;
+    };*/
+
+    class SimulationTask : public OMPWorkerThread::Task
+    {
+    public:
+        SimulationTask(MSLane &l, const SUMOTime time)
+            : myLane(l), myTime(time) {}
+        void init(Operation operation, const SUMOTime time)
+        {
+            myOperation = operation;
+            myTime = time;
+        }
+        void run()
+        {
+            try
+            {
+                (myLane.*(myOperation))(myTime);
+            }
+            catch (ProcessError &e)
+            {
+                WRITE_ERROR(e.what());
+            }
+        }
+
+    private:
+        Operation myOperation = nullptr;
+        MSLane &myLane;
+        SUMOTime myTime;
+
+    private:
+        /// @brief Invalidated assignment operator.
+        SimulationTask &operator=(const SimulationTask &) = delete;
     };
 
     SimulationTask mySimulationTask;

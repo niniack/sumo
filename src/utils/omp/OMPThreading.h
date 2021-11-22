@@ -56,7 +56,7 @@ public:
          *
          * @param[in] context The thread which runs the task
          */
-        virtual void run(OMPWorkerThread *context) = 0;
+        virtual void run() = 0;
 
         /** @brief Sets the running index of this task.
          *
@@ -160,8 +160,9 @@ public:
         /// @brief waits for all tasks to be finished
         void waitAll(const bool deleteFinished = true)
         {
+            //printf("\n Calling waitall from OMP File\n");
             // Create dummy context
-            OMPWorkerThread *dummy = myWorkers[0];
+            OMPWorkerThread *dummy = nullptr;
 
             // Set number of threads to be forked
             omp_set_num_threads(this->numberOfWorkers);
@@ -176,12 +177,16 @@ public:
                     {
 #pragma omp task
                         {
-                            task->run(dummy);
+                            //printf("Running OMP task\t %s \n", typeid(task).name());
+                            task->run();
+                            //printf("Done running OMP task\n");
                         }
                     }
                 }
 #pragma omp taskwait
             }
+            //printf("\nDone with WAITALL\n");
+            clear();
             return;
         }
 

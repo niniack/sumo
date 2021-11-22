@@ -418,11 +418,12 @@ MSRoutingEngine::initRouter(SUMOVehicle* vehicle) {
     myRouterProvider = new MSRouterProvider(router, nullptr, nullptr, railRouter);
 #ifndef THREAD_POOL
 #ifdef HAVE_FOX
-    FXWorkerThread::Pool& threadPool = MSNet::getInstance()->getEdgeControl().getThreadPool();
+    OMPWorkerThread::Pool &threadPool = MSNet::getInstance()->getEdgeControl().getThreadPool();
     if (threadPool.size() > 0) {
-        const std::vector<FXWorkerThread*>& threads = threadPool.getWorkers();
+        const std::vector<OMPWorkerThread *> &threads = threadPool.getWorkers();
         if (static_cast<MSEdgeControl::WorkerThread*>(threads.front())->setRouterProvider(myRouterProvider)) {
-            for (std::vector<FXWorkerThread*>::const_iterator t = threads.begin() + 1; t != threads.end(); ++t) {
+            for (std::vector<OMPWorkerThread *>::const_iterator t = threads.begin() + 1; t != threads.end(); ++t)
+            {
                 static_cast<MSEdgeControl::WorkerThread*>(*t)->setRouterProvider(myRouterProvider->clone());
             }
         }
@@ -441,7 +442,7 @@ MSRoutingEngine::reroute(SUMOVehicle& vehicle, const SUMOTime currentTime, const
     auto& router = myRouterProvider->getVehicleRouter(vehicle.getVClass());
 #ifndef THREAD_POOL
 #ifdef HAVE_FOX
-    FXWorkerThread::Pool& threadPool = MSNet::getInstance()->getEdgeControl().getThreadPool();
+    OMPWorkerThread::Pool& threadPool = MSNet::getInstance()->getEdgeControl().getThreadPool();
     if (threadPool.size() > 0) {
         threadPool.add(new RoutingTask(vehicle, currentTime, info, onInit, silent, prohibited));
         return;
@@ -489,7 +490,7 @@ MSRoutingEngine::getRouterTT(const int rngIndex, SUMOVehicleClass svc, const MSE
     }
 #ifndef THREAD_POOL
 #ifdef HAVE_FOX
-    FXWorkerThread::Pool& threadPool = MSNet::getInstance()->getEdgeControl().getThreadPool();
+    OMPWorkerThread::Pool &threadPool = MSNet::getInstance()->getEdgeControl().getThreadPool();
     if (threadPool.size() > 0) {
         auto& router = static_cast<MSEdgeControl::WorkerThread*>(threadPool.getWorkers()[rngIndex % MSGlobals::gNumThreads])->getRouter(svc);
         router.prohibit(prohibited);
@@ -532,7 +533,7 @@ MSRoutingEngine::cleanup() {
 void
 MSRoutingEngine::waitForAll() {
 #ifndef THREAD_POOL
-    FXWorkerThread::Pool& threadPool = MSNet::getInstance()->getEdgeControl().getThreadPool();
+    OMPWorkerThread::Pool &threadPool = MSNet::getInstance()->getEdgeControl().getThreadPool();
     if (threadPool.size() > 0) {
         threadPool.waitAll();
     }
@@ -543,9 +544,9 @@ MSRoutingEngine::waitForAll() {
 // ---------------------------------------------------------------------------
 // MSRoutingEngine::RoutingTask-methods
 // ---------------------------------------------------------------------------
-void
-MSRoutingEngine::RoutingTask::run(FXWorkerThread* context) {
-    SUMOAbstractRouter<MSEdge, SUMOVehicle>& router = static_cast<MSEdgeControl::WorkerThread*>(context)->getRouter(myVehicle.getVClass());
+void MSRoutingEngine::RoutingTask::run()
+{
+    SUMOAbstractRouter<MSEdge, SUMOVehicle>& router = static_cast<MSEdgeControl::WorkerThread*>(nullptr)->getRouter(myVehicle.getVClass());
     if (!myProhibited.empty()) {
         router.prohibit(myProhibited);
     }

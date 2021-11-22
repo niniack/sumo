@@ -47,6 +47,7 @@
 #else
 #ifdef HAVE_FOX
 #include <utils/foxtools/FXWorkerThread.h>
+#include <utils/omp/OMPThreading.h>
 #endif
 #endif
 
@@ -198,7 +199,7 @@ public:
 
 #ifndef THREAD_POOL
 #ifdef HAVE_FOX
-    FXWorkerThread::Pool& getThreadPool() {
+    OMPWorkerThread::Pool &getThreadPool() {
         return myThreadPool;
     }
 #endif
@@ -230,10 +231,10 @@ public:
      * @class WorkerThread
      * @brief the thread which provides the router instance as context
      */
-    class WorkerThread : public FXWorkerThread {
+    class WorkerThread : public OMPWorkerThread {
     public:
-        WorkerThread(FXWorkerThread::Pool& pool)
-            : FXWorkerThread(pool), myRouterProvider(nullptr) {}
+        WorkerThread(OMPWorkerThread::Pool &pool)
+            : OMPWorkerThread(pool), myRouterProvider(nullptr) {}
 
         bool setRouterProvider(MSRouterProvider* routerProvider) {
             if (myRouterProvider == nullptr) {
@@ -245,7 +246,8 @@ public:
         SUMOAbstractRouter<MSEdge, SUMOVehicle>& getRouter(SUMOVehicleClass svc) const {
             return myRouterProvider->getVehicleRouter(svc);
         }
-        virtual ~WorkerThread() {
+        virtual ~WorkerThread()
+        {
             stop();
             delete myRouterProvider;
         }
@@ -281,12 +283,8 @@ private:
 
     double myMinLengthGeometryFactor;
 
-#ifdef THREAD_POOL
-    WorkStealingThreadPool<> myThreadPool;
-#else
 #ifdef HAVE_FOX
-    FXWorkerThread::Pool myThreadPool;
-#endif
+    OMPWorkerThread::Pool myThreadPool;
 #endif
 
     std::vector<StopWatch<std::chrono::nanoseconds> > myStopWatch;

@@ -30,7 +30,7 @@
 class TestTask : public OMPWorkerThread::Task
 {
 public:
-    void run(OMPWorkerThread * /* context */)
+    void run()
     {
         printf("Hello World!\n");
     }
