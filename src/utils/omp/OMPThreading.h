@@ -168,27 +168,22 @@ public:
             omp_set_num_threads(this->numberOfWorkers);
 
 // Synchronized parallel region
-#pragma omp parallel
-            {
-// No barrier on single
-#pragma omp single nowait
-                {
-                    for (auto &task : myTasks)
-                    {
-#pragma omp task
-                        {
-                            //printf("Running OMP task\t %s \n", typeid(task).name());
-                            task->run();
-                            //printf("Done running OMP task\n");
-                        }
-                    }
-                }
-#pragma omp taskwait
-            }
-            //printf("\nDone with WAITALL\n");
-            clear();
-            return;
-        }
+    
+    #pragma omp parallel for
+            
+    for (Task* task : myTasks)
+    {                     
+            //printf("Running OMP task\t %s \n", typeid(task).name());
+            task->run();
+            //printf("Done running OMP task\n")
+    }
+    if(deleteFinished) {
+        for(Task* task : myTasks)
+        delete task;
+    }
+    clear();
+    return;
+    }
 
         /** @brief Checks whether there are currently more pending tasks than threads.
          *
@@ -253,7 +248,7 @@ public:
         /// @brief the current worker threads
         std::vector<OMPWorkerThread *> myWorkers;
         /// @brief list of finished tasks
-        std::list<Task *> myFinishedTasks;
+        std::list<Task* > myFinishedTasks;
         /// @brief the running index for the next task
         int myRunningIndex;
         /// @brief the exception from a child thread
