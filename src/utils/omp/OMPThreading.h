@@ -160,29 +160,25 @@ public:
         /// @brief waits for all tasks to be finished
         void waitAll(const bool deleteFinished = true)
         {
-            //printf("\n Calling waitall from OMP File\n");
-            // Create dummy context
-            OMPWorkerThread *dummy = nullptr;
-
             // Set number of threads to be forked
             omp_set_num_threads(this->numberOfWorkers);
 
-// Synchronized parallel region
-    
-    #pragma omp parallel for
-            
-    for (Task* task : myTasks)
-    {                     
-            //printf("Running OMP task\t %s \n", typeid(task).name());
-            task->run();
-            //printf("Done running OMP task\n")
-    }
-    if(deleteFinished) {
-        for(Task* task : myTasks)
-        delete task;
-    }
-    clear();
-    return;
+        // Synchronized parallel region
+        #pragma omp parallel for
+                
+        for (Task* task : myTasks)
+        {                     
+                //printf("Running OMP task\t %s \n", typeid(task).name());
+                task->run();
+                //printf("Done running OMP task\n")
+        }
+        if(deleteFinished) {
+            for(Task* task : myTasks)
+            delete task;
+        }
+        myTasks.clear();
+        clear();
+        return;
     }
 
         /** @brief Checks whether there are currently more pending tasks than threads.

@@ -40,7 +40,6 @@ class TestTaskOMP : public OMPWorkerThread::Task
         void run()
         {
             sleep(1);
-            printf("Done with thread %d\n", id_num);
         }
 };
 
@@ -64,7 +63,6 @@ TEST(OMPWorkerThread, test_omp_time)
 {
     std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
     OMPWorkerThread::Pool g(4);
-
     OMPWorkerThread::Task *task1 = new TestTaskOMP(1);
     OMPWorkerThread::Task *task2 = new TestTaskOMP(2);
     OMPWorkerThread::Task *task3 = new TestTaskOMP(3);
@@ -73,8 +71,7 @@ TEST(OMPWorkerThread, test_omp_time)
     g.add(task2);
     g.add(task3);
     g.add(task4);
-    g.waitAll();
-
+    g.waitAll(true);
     std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
     std::cout << "Threads completed in " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << "ms" << std::endl;
 }
@@ -92,7 +89,7 @@ TEST(FXWorkerThread, test_foxtools_time)
     g.add(task2);
     g.add(task3);
     g.add(task4);
-    g.waitAll();
+    g.waitAll(true);
 
     std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
     std::cout << "Threads completed in " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << "ms" << std::endl;
