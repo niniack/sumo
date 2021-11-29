@@ -90,6 +90,7 @@ public:
          */
         Pool(int numThreads = 0) : myRunningIndex(0), myException(nullptr)
         {
+            omp_set_num_threads(numThreads);
             while (numThreads > 0)
             {
                 new OMPWorkerThread(*this);
@@ -161,16 +162,18 @@ public:
         void waitAll(const bool deleteFinished = true)
         {
             // Set number of threads to be forked
-            omp_set_num_threads(this->numberOfWorkers);
+            //omp_set_num_threads(this->numberOfWorkers);
 
-        // Synchronized parallel region
-        #pragma omp parallel for
-                
-        for (Task* task : myTasks)
-        {                     
-                //printf("Running OMP task\t %s \n", typeid(task).name());
-                task->run();
-                //printf("Done running OMP task\n")
+     int num_tasks = myTasks.size();
+     int num_thread = num_tasks / 16;   
+#pragma omp parallel num_threads(num_thread)
+        //printf("Thread count: %d\n", omp_get_num_threads());
+#pragma omp for
+        for (Task *task : myTasks)
+        {                            
+            //printf("Running OMP task\t %s \n", typeid(task).name());
+            task->run();
+            //printf("Done running OMP task\n")
         }
         if(deleteFinished) {
             for(Task* task : myTasks)
