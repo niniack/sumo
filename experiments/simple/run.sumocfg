@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 2021-10-19 09:01:12 by Eclipse SUMO sumo Version v1_10_0+1504-44bb015
+-->
+
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
+
+    <input>
+        <net-file value="net2.net.xml"/>
+        <route-files value="flows.rou.xml"/>
+    </input>
+
+</configuration>
+
+   <!--  <time>
+        <end value="1000"/>
+    </time>
+
+    <processing>
+        <threads value="16"/>
+    </processing> -->

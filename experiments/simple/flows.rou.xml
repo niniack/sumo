@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 2021-10-18 17:44:54 by Eclipse SUMO netedit Version v1_10_0+1504-44bb015
+-->
+
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
+
+    <route id="r15" edges="left15A15 A15B15 B15C15 C15D15 D15E15 E15F15 F15G15 G15H15 H15I15 I15J15 J15K15 K15L15 L15M15 M15N15 N15O15 O15P15 P15right15"/>
+    <route id="r14" edges="left14A14 A14B14 B14C14 C14D14 D14E14 E14F14 F14G14 G14H14 H14I14 I14J14 J14K14 K14L14 L14M14 M14N14 N14O14 O14P14 P14right14"/>
+    <route id="r13" edges="left13A13 A13B13 B13C13 C13D13 D13E13 E13F13 F13G13 G13H13 H13I13 I13J13 J13K13 K13L13 L13M13 M13N13 N13O13 O13P13 P13right13"/>
+    <route id="r12" edges="left12A12 A12B12 B12C12 C12D12 D12E12 E12F12 F12G12 G12H12 H12I12 I12J12 J12K12 K12L12 L12M12 M12N12 N12O12 O12P12 P12right12"/>
+    <route id="r11" edges="left11A11 A11B11 B11C11 C11D11 D11E11 E11F11 F11G11 G11H11 H11I11 I11J11 J11K11 K11L11 L11M11 M11N11 N11O11 O11P11 P11right11"/>
+    <route id="r10" edges="left10A10 A10B10 B10C10 C10D10 D10E10 E10F10 F10G10 G10H10 H10I10 I10J10 J10K10 K10L10 L10M10 M10N10 N10O10 O10P10 P10right10"/>
+
+    <route id="r09" edges="left9A9 A9B9 B9C9 C9D9 D9E9 E9F9 F9G9 G9H9 H9I9 I9J9 J9K9 K9L9 L9M9 M9N9 N9O9 O9P9 P9right9"/>
+    <route id="r08" edges="left8A8 A8B8 B8C8 C8D8 D8E8 E8F8 F8G8 G8H8 H8I8 I8J8 J8K8 K8L8 L8M8 M8N8 N8O8 O8P8 P8right8"/>
+    <route id="r07" edges="left7A7 A7B7 B7C7 C7D7 D7E7 E7F7 F7G7 G7H7 H7I7 I7J7 J7K7 K7L7 L7M7 M7N7 N7O7 O7P7 P7right7"/>
+    <route id="r06" edges="left6A6 A6B6 B6C6 C6D6 D6E6 E6F6 F6G6 G6H6 H6I6 I6J6 J6K6 K6L6 L6M6 M6N6 N6O6 O6P6 P6right6"/>
+    <route id="r05" edges="left5A5 A5B5 B5C5 C5D5 D5E5 E5F5 F5G5 G5H5 H5I5 I5J5 J5K5 K5L5 L5M5 M5N5 N5O5 O5P5 P5right5"/>
+
+    <route id="r04" edges="left4A4 A4B4 B4C4 C4D4 D4E4 E4F4 F4G4 G4H4 H4I4 I4J4 J4K4 K4L4 L4M4 M4N4 N4O4 O4P4 P4right4"/>
+    <route id="r03" edges="left3A3 A3B3 B3C3 C3D3 D3E3 E3F3 F3G3 G3H3 H3I3 I3J3 J3K3 K3L3 L3M3 M3N3 N3O3 O3P3 P3right3"/>
+    <route id="r02" edges="left2A2 A2B2 B2C2 C2D2 D2E2 E2F2 F2G2 G2H2 H2I2 I2J2 J2K2 K2L2 L2M2 M2N2 N2O2 O2P2 P2right2"/>
+    <route id="r01" edges="left1A1 A1B1 B1C1 C1D1 D1E1 E1F1 F1G1 G1H1 H1I1 I1J1 J1K1 K1L1 L1M1 M1N1 N1O1 O1P1 P1right1"/>
+    <route id="r00" edges="left0A0 A0B0 B0C0 C0D0 D0E0 E0F0 F0G0 G0H0 H0I0 I0J0 J0K0 K0L0 L0M0 M0N0 N0O0 O0P0 P0right0"/>
+
+
+    <flow id="flow15" route="r15" begin="0.00" end="3600.00" number="1800" departSpeed="max"/>
+    <flow id="flow14" route="r14" begin="0.00" end="3600.00" number="1800" departSpeed="max"/>
+    <flow id="flow13" route="r13" begin="0.00" end="3600.00" number="1800" departSpeed="max"/>
+    <flow id="flow12" route="r12" begin="0.00" end="3600.00" number="1800" departSpeed="max"/>
+    <flow id="flow11" route="r11" begin="0.00" end="3600.00" number="1800" departSpeed="max"/>
+    <flow id="flow10" route="r10" begin="0.00" end="3600.00" number="1800" departSpeed="max"/>
+                                
+    <flow id="flow09" route="r09" begin="0.00" end="3600.00" number="1800" departSpeed="max"/>
+    <flow id="flow08" route="r08" begin="0.00" end="3600.00" number="1800" departSpeed="max"/>
+    <flow id="flow07" route="r07" begin="0.00" end="3600.00" number="1800" departSpeed="max"/>
+    <flow id="flow06" route="r06" begin="0.00" end="3600.00" number="1800" departSpeed="max"/>
+    <flow id="flow05" route="r05" begin="0.00" end="3600.00" number="1800" departSpeed="max"/>
+                                
+    <flow id="flow04" route="r04" begin="0.00" end="3600.00" number="1800" departSpeed="max"/>
+    <flow id="flow03" route="r03" begin="0.00" end="3600.00" number="1800" departSpeed="max"/>
+    <flow id="flow02" route="r02" begin="0.00" end="3600.00" number="1800" departSpeed="max"/>
+    <flow id="flow01" route="r01" begin="0.00" end="3600.00" number="1800" departSpeed="max"/>
+    <flow id="flow00" route="r00" begin="0.00" end="3600.00" number="1800" departSpeed="max"/>
+
+</routes>
